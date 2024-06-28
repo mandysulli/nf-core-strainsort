@@ -14,18 +14,16 @@ class WorkflowMain {
             // TODO nf-core: Add Zenodo DOI for pipeline after first release
             //"* The pipeline\n" +
             //"  https://doi.org/10.5281/zenodo.XXXXXXX\n\n" +
-            "* The nf-core framework\n" +
-            "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
-            "* Software dependencies\n" +
+            '* The nf-core framework\n' +
+            '  https://doi.org/10.1038/s41587-020-0439-x\n\n' +
+            '* Software dependencies\n' +
             "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
     }
-
 
     //
     // Validate parameters and print summary to screen
     //
     public static void initialise(workflow, params, log, args) {
-
         // Print workflow version and exit on --version
         if (params.version) {
             String workflow_version = NfcoreTemplate.version(workflow)
@@ -68,10 +66,11 @@ class WorkflowMain {
     //
     private static void checkProfile(profile, args, log) {
         if (profile.endsWith(',')) {
-            Nextflow.error "Profile cannot end with a trailing comma. Please remove the comma from the end of the profile string.\nHint: A common mistake is to provide multiple values to `-profile` separated by spaces. Please use commas to separate profiles instead,e.g., `-profile docker,test`."
+            Nextflow.error 'Profile cannot end with a trailing comma. Please remove the comma from the end of the profile string.\nHint: A common mistake is to provide multiple values to `-profile` separated by spaces. Please use commas to separate profiles instead,e.g., `-profile docker,test`.'
         }
         if (args[0]) {
             log.warn "nf-core pipelines do not accept positional arguments. The positional argument `${args[0]}` has been detected.\n      Hint: A common mistake is to provide multiple values to `-profile` separated by spaces. Please use commas to separate profiles instead,e.g., `-profile docker,test`."
         }
     }
+
 }
