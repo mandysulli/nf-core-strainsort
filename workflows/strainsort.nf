@@ -49,6 +49,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { KALLISTO                    } from '../modules/local/kallisto.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,6 +63,7 @@ def multiqc_report = []
 workflow STRAINSORT {
     // Initializing parameters
     samplesheet_ch = Channel.fromPath(params.input, checkIfExists: true)
+    ref_db_ch = Channel.fromPath(params.database, checkIfExists: true)
     ch_versions = Channel.empty()
 
     //
@@ -109,6 +111,13 @@ workflow STRAINSORT {
         ch_multiqc_logo.toList()
     )
     multiqc_report = MULTIQC.out.report.toList()
+
+    input_ch = samplesheet_ch
+        .splitCsv(header: true)
+    kallisto_ch = input_ch.map { item ->
+    [item.sample, item.fastq_1, item.fastq_2]}
+
+    KALLISTO(kallisto_ch)
 }
 
 /*
