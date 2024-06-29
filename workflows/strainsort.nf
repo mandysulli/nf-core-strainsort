@@ -49,6 +49,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { INDEXREFERENCEDB            } from '../modules/local/indexreferencedb.nf'
 include { KALLISTO                    } from '../modules/local/kallisto.nf'
 
 /*
@@ -66,20 +67,16 @@ workflow STRAINSORT {
     ref_db_ch = Channel.fromPath(params.database, checkIfExists: true)
     ch_versions = Channel.empty()
 
-    //
+    // MODULE: Index Reference Database
+    INDEXREFERENCEDB(ref_db_ch)
+
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
     INPUT_CHECK(
         file(params.input)
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
 
-    //
     // MODULE: Run FastQC
-    //
     FASTQC(
         INPUT_CHECK.out.reads
     )
@@ -89,9 +86,7 @@ workflow STRAINSORT {
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    //
     // MODULE: MultiQC
-    //
     workflow_summary    = WorkflowStrainsort.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
@@ -117,7 +112,8 @@ workflow STRAINSORT {
     kallisto_ch = input_ch.map { item ->
     [item.sample, item.fastq_1, item.fastq_2]}
 
-    KALLISTO(kallisto_ch)
+    // MODULE: Run Kallisto
+    //KALLISTO(kallisto_ch)
 }
 
 /*

@@ -1,5 +1,5 @@
 process KALLISTO {
-    tag '$bam'
+    tag { "${sample}" }
     label 'process_medium'
     container 'zavolab/kallisto:0.46.1'
 
@@ -27,7 +27,7 @@ process KALLISTO {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kallisto: \$(samtools --version |& sed '1!d ; s/samtools //')
+        kallisto: \$(kallisto --version |& sed '1!d ; s/samtools //')
     END_VERSIONS
     """
 
@@ -39,7 +39,7 @@ process KALLISTO {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kallisto: \$(samtools --version |& sed '1!d ; s/samtools //')
+        kallisto: \$(kallisto --version |& sed '1!d ; s/samtools //')
     END_VERSIONS
     """
 }
