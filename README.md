@@ -32,26 +32,46 @@
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
 
-## Usage
+## Inputs Required
 
+:::note
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+<!-- TODO: add test configuration -->
+:::
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
-First, prepare a samplesheet with your input data that looks as follows:
+1. A samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
 sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+CONTROL_REP1,<FILE_PATH>AEG588A1_trimmed_R1.fastq.gz,<FILE_PATH>AEG588A1_trimmed_R2.fastq.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+Each row represents a trimmed and quality filtered fastq file (single-end) or a pair of fastq files (paired end). If you have single-end reads keep the fastq_2 column, but leave it blank.
+
+2. Compiled reference genomes or sequences (such as scaffolds) to be used as a reference database in fasta format. If using eukaryotic genomes it is recommended that you filter out contamination using NCBI's FCS screening tool. Details can be found here: <https://github.com/ncbi/fcs>
+
+3. A strain key - must have the headers of the reference sequences in the target_id (first) column and the organism id associated with that sequence in the organism_id (second) column. The second column will be used to determine how the redas are divided. The ids in the second column can be at whatever taxominc level you would like (species, strain, etc.). Other data can be present. The set up should be setup as seen here:
+
+`strain_key.txt`:
+
+```txt
+target_id organism_id
+hCoV-19/USA/GA-EHC-3701I/2022 BA.1.1.18   Omicron_BA.1
+hCoV-19/USA/GA-CDC-LC0550476/2022   BA.2  Omicron_BA.2
+hCoV-19/USA/GA-CDC-LC0584704/2022   BA.2.9.7    Omicron_BA.2
+hCoV-19/USA/GA-EHC-5920R/2022 BA.4.1      Omicron_BA.4
+hCoV-19/USA/GA-EHC-5935C/2022 BA.5.1.22   Omicron_BA.5
+
+```
+
+4. A single reference genome from the species of interest in fasta format.
 
 -->
+
+## Usage
 
 Now, you can run the pipeline using:
 
@@ -59,9 +79,13 @@ Now, you can run the pipeline using:
 
 ```bash
 nextflow run nf-core/strainsort \
-   -profile <docker/singularity/.../institute> \
+   -profile <docker/singularity/.../institute> \ 
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --outdir <OUTDIR> \
+   --single_genome single_ref_genome.fasta \
+   --database compiled_reference_db.fasta \
+   --key strain_ket.txt \
+   --readtype single \ can be single or paired-end
 ```
 
 > [!WARNING]
