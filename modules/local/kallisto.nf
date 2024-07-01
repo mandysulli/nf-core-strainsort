@@ -4,10 +4,10 @@ process KALLISTO {
     container 'zavolab/kallisto:0.46.1'
 
     input:
-    tuple val(sample), path(fastq_1), path(fastq_2)
+    tuple val(sample), path(fastq_1), path(fastq_2), path(index)
 
     output:
-    path '*.bam', emit: bam
+    tuple val(sample), path('*'), emit: kallisto_outputs
     path 'versions.yml'           , emit: versions
 
     when:
@@ -20,8 +20,8 @@ process KALLISTO {
     kallisto quant \\
     -b 100 \\
     --pseudobam \\
-    -i $index/sequences.kallisto_idx \\
-    -o $output/{$sample} \\
+    -i ${index} \\
+    -o ${sample} \\
     ${fastq_1} \\
     ${fastq_2}
 

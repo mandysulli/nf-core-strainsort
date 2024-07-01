@@ -69,7 +69,7 @@ workflow STRAINSORT {
 
     // MODULE: Index Reference Database
     INDEXREFERENCEDB(ref_db_ch)
-
+    /*
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     INPUT_CHECK(
         file(params.input)
@@ -106,14 +106,15 @@ workflow STRAINSORT {
         ch_multiqc_logo.toList()
     )
     multiqc_report = MULTIQC.out.report.toList()
-
+    */
     input_ch = samplesheet_ch
         .splitCsv(header: true)
-    kallisto_ch = input_ch.map { item ->
+    input_ch2 = input_ch.map { item ->
     [item.sample, item.fastq_1, item.fastq_2]}
+    kallisto_ch = input_ch2.combine(INDEXREFERENCEDB.out.index)
 
     // MODULE: Run Kallisto
-    //KALLISTO(kallisto_ch)
+    KALLISTO(kallisto_ch)
 }
 
 /*

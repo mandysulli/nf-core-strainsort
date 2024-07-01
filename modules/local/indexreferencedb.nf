@@ -1,6 +1,6 @@
 process INDEXREFERENCEDB {
     tag 'Indexing reference database'
-    label 'process_low'
+    label 'process_medium'
     container 'zavolab/kallisto:0.46.1'
 
     publishDir "${params.outdir}", pattern: '*.kallisto_idx', mode: 'copy'
@@ -9,7 +9,7 @@ process INDEXREFERENCEDB {
     path ref_db
 
     output:
-    path '*.kallisto_idx', emit: bam
+    path '*.kallisto_idx', emit: index
     path 'versions.yml'           , emit: versions
 
     when:
