@@ -36,9 +36,10 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK           } from '../subworkflows/local/input_check'
-include { INDEXREFERENCEDB            } from '../modules/local/indexreferencedb.nf'
-include { KALLISTO                    } from '../modules/local/kallisto.nf'
-include { SEPARATEREADSBYSTRAIN } from '../subworkflows/local/separatereadsbystrain'
+include { INDEXREFERENCEDB      } from '../modules/local/indexreferencedb.nf'
+include { KALLISTO              } from '../modules/local/kallisto.nf'
+include { ARRANGEKOUTPUTS       } from '../modules/local/arrangekoutputs.nf'
+include { SEPARATEREADSBYSTRAIN } from '../subworkflows/local/separatereadsbystrain.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -117,8 +118,11 @@ workflow STRAINSORT {
     // MODULE: Run Kallisto
     KALLISTO(kallisto_ch)
 
+    //MODULE: Rename and move tsv and bam files from Kallisto
+    ARRANGEKOUTPUTS(KALLISTO.out.kallisto_outputs)
+
     //SUBWORKFLOW: Separate reads by strain
-    SEPARATEREADSBYSTRAIN(KALLISTO.out.kallisto_outputs)
+    SEPARATEREADSBYSTRAIN(ARRANGEKOUTPUTS.out.bam)
 }
 
 /*

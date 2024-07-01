@@ -7,24 +7,17 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK           } from '../subworkflows/local/input_check'
-include { INDEXREFERENCEDB            } from '../modules/local/indexreferencedb.nf'
-include { KALLISTO                    } from '../modules/local/kallisto.nf'
-include { SEPARATEREADSBYSTRAIN } from '../subworkflows/local/separatereadsbystrain'
+//include { ARRANGEKOUTPUTS           } from '../modules/local/arrangekoutputs.nf'
 
 workflow SEPARATEREADSBYSTRAIN {
     take:
-    // TODO nf-core: edit input (take) channels
-    ch_bam // channel: [ val(meta), [ bam ] ]
+    kallisto_bam_ch //channel: kallisto bam outputs
 
     main:
-
     ch_versions = Channel.empty()
 
-    // TODO nf-core: substitute modules here for the modules of your subworkflow
-
-    SAMTOOLS_SORT(ch_bam)
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    ARRANGEKOUTPUTS(kallisto_outputs_ch)
+    ch_versions = ch_versions.mix(ARRANGEKOUTPUTS.out.versions.first())
 
     SAMTOOLS_INDEX(SAMTOOLS_SORT.out.bam)
     ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
@@ -37,4 +30,3 @@ workflow SEPARATEREADSBYSTRAIN {
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
-
