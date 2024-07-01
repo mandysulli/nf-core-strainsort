@@ -4,11 +4,11 @@ process PSEUDOBAMTOSAM {
     container 'staphb/samtools'
 
     input:
-    tuple val(sample), path (bam_files)
+    tuple val(sample), path(bam_files)
 
     output:
-    tuple val(sample), path "*.sam", emit: sam
-    path "versions.yml"           , emit: versions
+    tuple val(sample), path('*.sam'), emit: sam
+    path 'versions.yml'           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,10 +32,6 @@ process PSEUDOBAMTOSAM {
     stub:
     def args = task.ext.args ?: ''
 
-    // TODO nf-core: A stub section should mimic the execution of the original module as best as possible
-    //               Have a look at the following examples:
-    //               Simple example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bcftools/annotate/main.nf#L47-L63
-    //               Complex example: https://github.com/nf-core/modules/blob/818474a292b4860ae8ff88e149fbcda68814114d/modules/nf-core/bedtools/split/main.nf#L38-L54
     """
     touch ${prefix}.bam
 
