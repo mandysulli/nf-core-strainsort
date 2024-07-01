@@ -9,7 +9,7 @@ process ARRANGEKOUTPUTS {
     tuple val(sample), path('*')
 
     output:
-    path '*.bam', emit: bam
+    tuple val(sample), path '*.bam', emit: bam
     path '*.tsv', emit: tsv
     path 'versions.yml'           , emit: versions
 
