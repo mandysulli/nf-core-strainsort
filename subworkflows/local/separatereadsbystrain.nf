@@ -4,6 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { PSEUDOBAMTOSAM           } from "${launchDir}/modules/local/pseudobamtosam.nf"
+include { EXTRACTMAPREADSPE        } from "${launchDir}/modules/local/extractmapreadspe.nf"
 
 workflow SEPARATEREADSBYSTRAIN {
     take:
@@ -14,6 +15,8 @@ workflow SEPARATEREADSBYSTRAIN {
 
     PSEUDOBAMTOSAM(kallisto_bam_ch)
     ch_versions = ch_versions.mix(PSEUDOBAMTOSAM.out.versions.first())
+
+    EXTRACTMAPREADSPE(PSEUDOBAMTOSAM.out.sam_outputs)
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]

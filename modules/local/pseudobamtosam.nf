@@ -7,8 +7,7 @@ process PSEUDOBAMTOSAM {
     tuple val(sample), path(bam_files)
 
     output:
-    tuple val(sample), path('*.sam'), emit: sam
-    tuple val(sample), path('*.txt'), emit: txt
+    tuple val(sample), path('*.sam'), path('*.txt'), emit: sam_outputs
     path 'versions.yml'           , emit: versions
 
     when:
@@ -37,8 +36,6 @@ process PSEUDOBAMTOSAM {
     def args = task.ext.args ?: ''
 
     """
-    touch ${prefix}.bam
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         pseudobamtosam: \$(samtools --version |& sed '1!d ; s/samtools //')

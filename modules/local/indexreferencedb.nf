@@ -31,8 +31,6 @@ process INDEXREFERENCEDB {
     def args = task.ext.args ?: ''
 
     """
-    touch ${prefix}.bam
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         indexreferencedb: \$(kallisto --version |& sed '1!d ; s/samtools //')
