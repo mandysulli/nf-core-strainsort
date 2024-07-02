@@ -12,8 +12,8 @@ workflow SEPARATEREADSBYSTRAIN {
     main:
     ch_versions = Channel.empty()
 
-    ARRANGEKOUTPUTS(kallisto_bam_ch)
-    ch_versions = ch_versions.mix(ARRANGEKOUTPUTS.out.versions.first())
+    PSEUDOBAMTOSAM(kallisto_bam_ch)
+    ch_versions = ch_versions.mix(PSEUDOBAMTOSAM.out.versions.first())
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]

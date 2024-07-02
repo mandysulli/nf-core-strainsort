@@ -8,6 +8,7 @@ process PSEUDOBAMTOSAM {
 
     output:
     tuple val(sample), path('*.sam'), emit: sam
+    tuple val(sample), path('*.txt'), emit: txt
     path 'versions.yml'           , emit: versions
 
     when:
@@ -20,8 +21,11 @@ process PSEUDOBAMTOSAM {
     samtools sort ${bam_files} > ${sample}_pseudoalignments_sorted.bam
     samtools index ${sample}_pseudoalignments_sorted.bam
     samtools view -h ${sample}_pseudoalignments_sorted.bam > ${sample}_pseudoalignments.sam
-    grep "@" ${sample}_pseudoalignments.sam > $output/sam_headers_Sample.txt
-    rm ${sample}_pseudoalignments_sorted.bai
+    grep "@" ${sample}_pseudoalignments.sam > sam_headers_${sample}.txt
+
+    rm ${sample}_pseudoalignments_sorted.bam.bai
+    rm ${sample}_pseudoalignments_sorted.bam
+    rm ${sample}_pseudoalignments.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
