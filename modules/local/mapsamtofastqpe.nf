@@ -1,6 +1,7 @@
 process MAPSAMTOFASTQPE {
     tag '$bam'
     label 'process_medium'
+    container 'staphb/samtools'
 
     input:
 
