@@ -19,6 +19,7 @@ process LINEAGESETUP {
 
     """
     javac ${java_file}
+    cp  ${launchDir}/assets/lineage_file_setup.class ./
 
     java lineage_file_setup ${key}
 
