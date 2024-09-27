@@ -8,7 +8,8 @@ process LINEAGESETUP {
     val key
 
     output:
-    path('*'), emit: bam
+    path('All_strain_name.csv'), emit: strain_names
+    path('*.txt'), emit: lineage_txt
     path 'versions.yml'           , emit: versions
 
     when:
@@ -19,9 +20,9 @@ process LINEAGESETUP {
 
     """
     javac ${java_file}
-    cp  ${launchDir}/assets/lineage_file_setup.class ./
+    cp  ${launchDir}/assets/lineage_file_setup_nf.class ./
 
-    java lineage_file_setup ${key}
+    java lineage_file_setup_nf ${key}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

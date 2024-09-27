@@ -39,7 +39,7 @@ include { INPUT_CHECK           } from '../subworkflows/local/input_check'
 include { INDEXREFERENCEDB      } from '../modules/local/indexreferencedb.nf'
 include { KALLISTO              } from '../modules/local/kallisto.nf'
 include { ARRANGEKOUTPUTS       } from '../modules/local/arrangekoutputs.nf'
-include { SEPARATEREADSBYSTRAIN } from '../subworkflows/local/separatereadsbystrain.nf'
+include { SEPARATEPAIREDREADSBYSTRAIN } from '../subworkflows/local/separatepairedreadsbystrain.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,7 +122,7 @@ workflow STRAINSORT {
     ARRANGEKOUTPUTS(KALLISTO.out.kallisto_outputs)
 
     //SUBWORKFLOW: Separate reads by strain
-    SEPARATEREADSBYSTRAIN(ARRANGEKOUTPUTS.out.bam)
+    SEPARATEPAIREDREADSBYSTRAIN(ARRANGEKOUTPUTS.out.bam)
 }
 
 /*

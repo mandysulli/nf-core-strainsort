@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class lineage_file_setup {
+public class lineage_file_setup_nf {
 
 	public static void main(String[] args) throws IOException {
 		File text = new File(args[0]);
@@ -110,12 +110,10 @@ public class lineage_file_setup {
 		
 		
 	    try {
-	    FileWriter myWriter = new FileWriter("All_strain_name.txt");
+	    FileWriter myWriter = new FileWriter("All_strain_name.csv");
 	    	for (int i = 0; i < strains_names.size(); i++) {
 	    		myWriter.write(strains_names.get(i));
-	    		if (i<(strains_names.size()-1)) {
-	    			myWriter.write(",");
-	    		}
+	    		myWriter.write(System.lineSeparator());
 	    	}
 	        myWriter.close();
 	    }
@@ -123,3 +121,4 @@ public class lineage_file_setup {
 	    	}
 	 } 
 }
+
