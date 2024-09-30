@@ -3,12 +3,10 @@ process SEPARATEBYSTRAIN {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container 'ubuntu'
+    container 'staphb/samtools'
 
     input:
-    val(sample)
-    path(mapped_read_sam)
-    path(sam_headers_files)
+    tuple val(sample), path(mapped_read_sam), path(sam_headers_files)
     val(strain_names)
     path(lineage_txt_files)
 
@@ -23,8 +21,8 @@ process SEPARATEBYSTRAIN {
     def args = task.ext.args ?: ''
 
     """
-    grep -f ${strain_names}.txt incomplete_${sample}_mapped_reads.sam > incomplete_${sample}_${strain_names}_reads.sam
-    cat sam_headers_${sample}.txt incomplete_${sample}_${strain_names}_reads.sam > ${sample}_${strain_names}_reads.sam
+    chmod 777 ${launchDir}/bin/strainseparate.sh
+    ${launchDir}/bin/strainseparate.sh -s ${strain_names} -i ${sample}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

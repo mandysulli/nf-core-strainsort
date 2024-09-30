@@ -9,9 +9,7 @@ process EXTRACTMAPREADSPE {
     tuple val(sample), path(sam_files), path(txt_files)
 
     output:
-    val(sample), emit: sample_names
-    path('incomplete_*_mapped_reads.sam'), emit: mapped_read_sam
-    path(txt_files), emit: sam_headers
+    tuple val(sample), path('incomplete_*_mapped_reads.sam'), path(txt_files), emit: mapped_read_sam
     path 'versions.yml'           , emit: versions
 
     when:

@@ -35,7 +35,7 @@ workflow SEPARATEPAIREDREADSBYSTRAIN {
     //EXTRACTMAPREADSPE.out.mapped_read_sam.view()
     //LINEAGESETUP.out.lineage_txt.view()
 
-    SEPARATEBYSTRAIN(EXTRACTMAPREADSPE.out.sample_names, EXTRACTMAPREADSPE.out.mapped_read_sam, EXTRACTMAPREADSPE.out.sam_headers, strain_names_ch, LINEAGESETUP.out.lineage_txt)
+    SEPARATEBYSTRAIN(EXTRACTMAPREADSPE.out.mapped_read_sam, strain_names_ch, LINEAGESETUP.out.lineage_txt)
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
