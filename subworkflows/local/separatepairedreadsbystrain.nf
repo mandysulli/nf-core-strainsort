@@ -32,10 +32,12 @@ workflow SEPARATEPAIREDREADSBYSTRAIN {
     EXTRACTMAPREADSPE(PSEUDOBAMTOSAM.out.sam_outputs)
     ch_versions = ch_versions.mix(EXTRACTMAPREADSPE.out.versions.first())
 
-    //EXTRACTMAPREADSPE.out.mapped_read_sam.view()
-    //LINEAGESETUP.out.lineage_txt.view()
+    mapped_reads_outputs_ch = EXTRACTMAPREADSPE.out.mapped_read_sam
+    mapped_reads_ch = mapped_reads_outputs_ch.combine(strain_names_ch)
+    lineage_files_ch = LINEAGESETUP.out.lineage_txt
+    final_mapped_reads_ch = mapped_reads_ch.combine(lineage_files_ch)
 
-    SEPARATEBYSTRAIN(EXTRACTMAPREADSPE.out.mapped_read_sam, strain_names_ch, LINEAGESETUP.out.lineage_txt)
+    SEPARATEBYSTRAIN(final_mapped_reads_ch)
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]

@@ -1,17 +1,13 @@
 process SEPARATEBYSTRAIN {
     tag { "${sample}" }
     label 'process_low'
-
-    conda "${moduleDir}/environment.yml"
     container 'staphb/samtools'
 
     input:
-    tuple val(sample), path(mapped_read_sam), path(sam_headers_files)
-    val(strain_names)
-    path(lineage_txt_files)
+    tuple val(sample), path(mapped_read_sam), path(sam_headers_files), val(strain_names), path(lineage_txt_files)
 
     output:
-    path '*.sam', emit: sam_files
+    tuple val(sample), path('*.sam'), emit: sam_files
     path 'versions.yml'           , emit: versions
 
     when:
