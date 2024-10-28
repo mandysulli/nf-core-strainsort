@@ -8,6 +8,7 @@ include { EXTRACTMAPREADSPE     } from "${launchDir}/modules/local/extractmaprea
 include { MAPSAMTOFASTQPE       } from "${launchDir}/modules/local/mapsamtofastqpe.nf"
 include { LINEAGESETUP          } from "${launchDir}/modules/local/lineagesetup.nf"
 include { SEPARATEBYSTRAIN      } from "${launchDir}/modules/local/separatebystrain.nf"
+include { SEPARATEBYSTRAIN      } from "${launchDir}/modules/local/separatebystrain.nf"
 
 workflow SEPARATEPAIREDREADSBYSTRAIN {
     take:
@@ -38,6 +39,8 @@ workflow SEPARATEPAIREDREADSBYSTRAIN {
     final_mapped_reads_ch = mapped_reads_ch.combine(lineage_files_ch)
 
     SEPARATEBYSTRAIN(final_mapped_reads_ch)
+
+    SAMTOFASTQ(SEPARATEBYSTRAIN.out.sam_files)
 
     emit:
     versions = ch_versions                     // channel: [ versions.yml ]
